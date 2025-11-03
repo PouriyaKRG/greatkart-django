@@ -1,0 +1,64 @@
+from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+# Create your models here.
+
+
+class MyAccountManager(BaseUserManager):
+    def create_user(self, first_name, last_name, email_address, phone_number, user_name, password=None):
+        if not phone_number:
+            raise ValueError('Phone number is required')
+        user = self.model(
+            email_address=self.normalize_email(email=email_address),
+            username=user_name,
+            first_name=first_name,
+            last_name=last_name,
+            phone_number=phone_number,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, first_name, last_name, email_address, user_name, phone_number, password):
+        user = self.create_user(
+            first_name=first_name,
+            username=user_name,
+            last_name=last_name,
+            email_address=self.normalize_email(email=email_address),
+            phone_number=phone_number,
+            password=password)
+        user.is_admin = True
+        user.is_active = True
+        user.is_staff = True
+        user.is_superadmin = True
+        user.save(using=self._db)
+        return user
+
+
+class Account(AbstractBaseUser):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
+    email_address = models.EmailField(max_length=100, unique=True)
+    phone_number = models.CharField(max_length=50, unique=True)
+
+    date_joined = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(auto_now=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+    is_superadmin = models.BooleanField(default=False)
+
+    objects = MyAccountManager()
+
+    USERNAME_FIELD = 'phone_number'
+    REQUIRED_FIELDS = ['email_address', 'first_name', 'last_name', 'username']
+
+    def __str__(self):
+        return f'{self.username} | {self.phone_number}'
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return True
