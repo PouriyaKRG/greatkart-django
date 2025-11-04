@@ -72,7 +72,12 @@
  <!-- row.// -->
 <hr>
 {% if product.is_available %}
-<a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
+{% if not is_in_cart %}
+<a href="{% url 'add-to-cart' product.id %}" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
+{% else %}
+<span class="btn btn-success">Successfully added to the cart <i class="fas fa-check" ></i></span>
+<a href="{% url 'cart-page' %}" class="btn btn-outline-primary">View Cart <i class="fas fa-eye"></i></a>
+{% endif %}
 {% else %}
 <span class="btn btn-secondary text">Out of Stock</span> <i class="fas fa-shopping-cart"></i> 
 
