@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from store import models as store_models
 from carts import models as carts_models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def __cart_id(request):
@@ -22,7 +23,7 @@ def cart_page(request, totalPay=0, quantity=0, cart_items=None):
             quantity += cart_item.quantity
         tax = 0.2 * totalPay
         grand_totalPay = totalPay + tax
-    except:
+    except ObjectDoesNotExist:
         pass
 
     context = {
