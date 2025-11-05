@@ -20,7 +20,7 @@
 		</aside>
 <main class="col-md-6 border-left">
 
-	<form action="{% url 'add-to-cart' product.id %}" method="POST">
+	<form action="{% url 'add-to-cart' product.id  %}" method="POST">
 			{% csrf_token %}
 			<article class="content-body">
 
@@ -36,7 +36,7 @@
 
 				<div class="row">
 					<div class="item-option-select">
-						<h6>Select color:</h6>
+						<h6>Select color</h6>
 						<select name="color" class="control-form"  required>
 							<option value="" disabled selected>Choose Color</option>
 							{% for var in product.variation_set.colors %}
@@ -60,12 +60,8 @@
 			<!-- row.// -->
 			<hr>
 			{% if product.is_available %}
-				{% if not is_in_cart %}
 					<button type="submit"  class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i></button>
-				{% else %}
-					<span class="btn btn-success">Successfully added to the cart <i class="fas fa-check" ></i></span>
 					<a  href="{% url 'cart-page' %}" class="btn btn-outline-primary">View Cart <i class="fas fa-eye"></i></a>
-				{% endif %}
 			{% else %}
 				<span class="btn btn-secondary text">Out of Stock</span> <i class="fas fa-shopping-cart"></i> 
 			{% endif %}
@@ -91,7 +87,7 @@
 
 	<article class="box mb-3">
 		<div class="icontext w-100">
-			<img src="./images/avatars/avatar1.jpg" class="img-xs icon rounded-circle">
+			<img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
 			<div class="text">
 				<span class="date text-muted float-md-right">24.04.2020 </span>  
 				<h6 class="mb-1">Mike John </h6>
