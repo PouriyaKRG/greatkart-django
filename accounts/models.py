@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class MyAccountManager(BaseUserManager):
     def create_user(self, first_name, last_name, email_address, phone_number, user_name, password=None):
-        if not phone_number:
-            raise ValueError('Phone number is required')
+        if not email_address:
+            raise ValueError('email address is required')
         user = self.model(
             email_address=self.normalize_email(email=email_address),
             username=user_name,
@@ -51,8 +51,8 @@ class Account(AbstractBaseUser):
 
     objects = MyAccountManager()
 
-    USERNAME_FIELD = 'phone_number'
-    REQUIRED_FIELDS = ['email_address', 'first_name', 'last_name', 'username']
+    USERNAME_FIELD = 'email_address'
+    REQUIRED_FIELDS = ['phone_number', 'first_name', 'last_name', 'username']
 
     def __str__(self):
         return f'{self.username} | {self.phone_number}'
