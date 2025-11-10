@@ -1,0 +1,250 @@
+{% extends 'greatKart/_base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg-light min-vh-100">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <!-- Payment Failed Card -->
+        <div class="card shadow-lg border-0">
+          <div class="card-body p-5">
+            <!-- Failed Header -->
+            <div class="text-center mb-5">
+              <div class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                   style="width: 100px; height: 100px;">
+                <i class="fas fa-exclamation-triangle fa-3x text-white"></i>
+              </div>
+              <h1 class="card-title text-danger mb-3">Payment Failed</h1>
+              <p class="lead text-muted">We encountered an issue processing your payment</p>
+            </div>
+
+            <!-- Error Details -->
+            <div class="alert alert-danger border-0 mb-5">
+              <div class="d-flex">
+                <i class="fas fa-info-circle fa-2x me-3 mt-1"></i>
+                <div>
+                  <h5 class="alert-heading mb-3">What happened?</h5>
+                  <div class="mb-3">
+                    {% for error in error_messages %}
+                    <div class="d-flex align-items-start mb-2">
+                      <i class="fas fa-times-circle text-danger me-2 mt-1"></i>
+                      <span>{{ error }}</span>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  <hr>
+                  <p class="mb-0 small">
+                    <strong>Note:</strong> No money has been deducted from your account. Your order is still pending.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Summary (if available) -->
+            {% if order %}
+            <div class="card border-warning mb-5">
+              <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                  <i class="fas fa-shopping-bag me-2"></i>Your Order Summary
+                </h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="mb-2"><strong>Order Number:</strong></p>
+                    <p class="mb-2"><strong>Order Date:</strong></p>
+                    <p class="mb-2"><strong>Total Amount:</strong></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="mb-2 text-dark">{{ order.order_number }}</p>
+                    <p class="mb-2 text-dark">{{ order.createdAt|date:"F d, Y" }}</p>
+                    <p class="mb-0 h5 text-primary">${{ order.orderTotal }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Quick Solutions -->
+            <div class="row mb-5">
+              <div class="col-12">
+                <h4 class="text-center mb-4">
+                  <i class="fas fa-lightbulb text-warning me-2"></i>Quick Solutions
+                </h4>
+              </div>
+              
+              <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 bg-light">
+                  <div class="card-body text-center">
+                    <i class="fas fa-credit-card fa-2x text-primary mb-3"></i>
+                    <h5 class="card-title">Check Payment Method</h5>
+                    <ul class="list-unstyled text-start small">
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Sufficient funds</li>
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Correct card details</li>
+                      <li class="mb-2"><i class="fas fa-check text-success me-2"></i>International payments enabled</li>
+                      <li class="mb-0"><i class="fas fa-check text-success me-2"></i>Card not expired</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 bg-light">
+                  <div class="card-body text-center">
+                    <i class="fas fa-sync-alt fa-2x text-info mb-3"></i>
+                    <h5 class="card-title">Try These Steps</h5>
+                    <ul class="list-unstyled text-start small">
+                      <li class="mb-2"><i class="fas fa-arrow-right text-info me-2"></i>Use a different card</li>
+                      <li class="mb-2"><i class="fas fa-arrow-right text-info me-2"></i>Check internet connection</li>
+                      <li class="mb-2"><i class="fas fa-arrow-right text-info me-2"></i>Wait a few minutes</li>
+                      <li class="mb-0"><i class="fas fa-arrow-right text-info me-2"></i>Clear browser cache</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Card Information -->
+            <div class="card border-info mb-5">
+              <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                  <i class="fas fa-vial me-2"></i>Testing Information
+                </h5>
+              </div>
+              <div class="card-body">
+                <p class="mb-3">For testing purposes, you can use the following test card details:</p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="bg-dark text-white p-3 rounded mb-3">
+                      <h6 class="text-warning mb-2">Test Card Details</h6>
+                      <p class="mb-1"><strong>Card Number:</strong> 4242 4242 4242 4242</p>
+                      <p class="mb-1"><strong>Expiry Date:</strong> Any future date</p>
+                      <p class="mb-1"><strong>CVC:</strong> Any 3 digits</p>
+                      <p class="mb-0"><strong>ZIP:</strong> Any 5 digits</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="bg-light p-3 rounded">
+                      <h6 class="text-success mb-2">Why use test mode?</h6>
+                      <p class="small mb-0">Test mode allows you to simulate payments without using real money. Perfect for development and testing your payment integration.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center">
+              <h4 class="mb-4">What would you like to do next?</h4>
+              
+              <div class="d-grid gap-3 d-md-flex justify-content-center">
+                {% if order %}
+                <a href="{% url 'retry_payment' %}" class="btn btn-primary btn-lg px-5 py-3">
+                  <i class="fas fa-redo me-2"></i>Retry Payment
+                </a>
+                {% else %}
+                <a href="{% url 'place_order' %}" class="btn btn-primary btn-lg px-5 py-3">
+                  <i class="fas fa-shopping-cart me-2"></i>Place New Order
+                </a>
+                {% endif %}
+                
+                <a href="{% url 'payment' %}" class="btn btn-warning btn-lg px-5 py-3">
+                  <i class="fas fa-credit-card me-2"></i>Try Different Payment Method
+                </a>
+                
+                <a href="{% url 'store-page' %}" class="btn btn-outline-secondary btn-lg px-5 py-3">
+                  <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+                </a>
+              </div>
+            </div>
+
+            <!-- Support Section -->
+            <div class="mt-6 pt-5 border-top">
+              <div class="text-center">
+                <h5 class="mb-3">Still need help?</h5>
+                <p class="text-muted mb-4">Our support team is here to help you complete your purchase</p>
+                
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                  <a href="tel:+1234567890" class="btn btn-outline-danger">
+                    <i class="fas fa-phone me-2"></i>Call Support
+                  </a>
+                  <a href="mailto:support@greatkart.com" class="btn btn-outline-info">
+                    <i class="fas fa-envelope me-2"></i>Email Us
+                  </a>
+                  <a href="#" class="btn btn-outline-success">
+                    <i class="fas fa-comments me-2"></i>Live Chat
+                  </a>
+                  <a href="#" class="btn btn-outline-primary">
+                    <i class="fas fa-question-circle me-2"></i>Help Center
+                  </a>
+                </div>
+                
+                <div class="mt-4">
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>
+                    Support available: Monday - Friday, 9AM - 6PM
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+  .card {
+    border-radius: 16px;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn-warning {
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  
+  .btn-outline-secondary {
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  
+  .bg-danger {
+    background: linear-gradient(45deg, #e53e3e, #dd6b20) !important;
+  }
+  
+  .alert {
+    border-radius: 12px;
+    border: none;
+  }
+  
+  .mt-6 {
+    margin-top: 4rem !important;
+  }
+  
+  .list-unstyled li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .bg-dark {
+    background: linear-gradient(45deg, #2d3748, #4a5568) !important;
+  }
+</style>
+{% endblock %}

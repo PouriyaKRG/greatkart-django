@@ -54,7 +54,10 @@ def add_cart(request, product_id):
                         product_variation.append(variation)
                     except:
                         pass
-            print(product_variation)            
+            
+            
+            product_variation.sort(key=lambda x: x.variation_category)
+                       
             is_cart_item_exist = carts_models.CartItem.objects.filter(product=product, user=current_user).exists()
             if is_cart_item_exist:
                 cart_items = carts_models.CartItem.objects.all().filter(product=product, user=current_user)
@@ -62,8 +65,9 @@ def add_cart(request, product_id):
                 ex_var_list = []
                 id_list = []
                 for item in cart_items:
-                    existing_variation = item.variation.all()
-                    ex_var_list.append([existing_variation[1],existing_variation[0]])
+                    existing_variation = list(item.variation.all())
+                    existing_variation.sort(key=lambda x : x.variation_category)
+                    ex_var_list.append(existing_variation)
                     id_list.append(item.id)
                 
                 if product_variation in ex_var_list:
@@ -230,23 +234,28 @@ def remove_item(request, product_id, cart_item_id):
 
 
 @login_required(login_url='login')
-def check_out(request, total=0,quantity=0, cart_items=None):
+def check_out(request, total=0, quantity=0, cart_items=None):
     grand_totalPay = 0.0
     tax = 0.0
     try:
         if request.user.is_authenticated:
             cart_items = carts_models.CartItem.objects.filter(user = request.user, is_active = True)
+            for cart_item in cart_items:
+                total += (cart_item.product.price * cart_item.quantity)
+                quantity += cart_item.quantity
+            tax = 0.2 * total
+            grand_totalPay = total + tax
         else:    
             cart = carts_models.Cart.objects.get(cart_id=__cart_id(request))
             cart_items = carts_models.CartItem.objects.filter(cart=cart, is_active=True)
             for cart_item in cart_items:
                 total += (cart_item.product.price * cart_item.quantity)
                 quantity += cart_item.quantity
-        tax = 0.2 * total
-        grand_totalPay = total + tax
+            tax = 0.2 * total
+            grand_totalPay = total + tax  
     except ObjectDoesNotExist:
         pass
-
+   
     context = {
         'totalPay': total,
         'qunatity': quantity,

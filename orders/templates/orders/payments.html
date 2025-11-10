@@ -1,0 +1,251 @@
+{% extends 'greatKart/_base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="section-content padding-y bg-light">
+  <div class="container">
+    <!-- Order Review Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center py-4">
+            <h2 class="card-title mb-3 text-primary">
+              <i class="fas fa-shopping-bag me-2"></i>Review Your Order
+            </h2>
+            <p class="card-text text-muted">Please review your order details and proceed with payment</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Left Column - Order Details -->
+      <aside class="col-lg-8">
+        <!-- Billing Address Card -->
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-primary text-white py-3">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-map-marker-alt me-2"></i>Billing Address
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mb-2"><strong>Name:</strong> {{ order.full_name }}</p>
+                <p class="mb-2"><strong>Email:</strong> {{ order.email }}</p>
+                <p class="mb-2"><strong>Phone:</strong> {{ order.phone }}</p>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-2"><strong>Address:</strong> {{ order.full_address }}</p>
+                <p class="mb-2"><strong>City:</strong> {{ order.city }}</p>
+                <p class="mb-2"><strong>State:</strong> {{ order.state }}</p>
+                <p class="mb-2"><strong>Country:</strong> {{ order.country }}</p>
+              </div>
+            </div>
+            {% if order.orderNote %}
+            <div class="mt-3 p-3 bg-light rounded">
+              <h6 class="text-primary"><i class="fas fa-sticky-note me-2"></i>Order Note:</h6>
+              <p class="mb-0 text-muted">{{ order.orderNote }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Payment Method Card -->
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-success text-white py-3">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-credit-card me-2"></i>Payment Method
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex align-items-center p-3 bg-light rounded">
+              <img style='width: 60px; height: 60px;' src="{% static 'images/icons/stripe.png' %}" alt="Stripe" class="me-3">
+              <div>
+                <h5 class="mb-1 text-success">Stripe</h5>
+                <p class="mb-0 text-muted">Secure payment processing</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Review Card -->
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-info text-white py-3">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-shopping-cart me-2"></i>Order Items
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col" class="text-center">Quantity</th>
+                    <th scope="col" class="text-end">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in cart_items %}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <a href="{{ item.product.get_url }}">
+                          <div class="me-3">
+                            <img src="{{ item.product.image.url }}" class="img-fluid rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                          </div>
+                        </a>
+                        <div>
+                          <a href="{{ item.product.get_url }}" class="text-dark fw-bold text-decoration-none">
+                            {{ item.product.product_name }}
+                          </a>
+                          {% if item.variation.all %}
+                          <div class="text-muted small mt-1">
+                            {% for i in item.variation.all %}
+                            <span class="badge bg-secondary me-1">
+                              {{ i.variation_category|capfirst }}: {{ i.variation_value|capfirst }}
+                            </span>
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </td>
+                    <td class="text-center align-middle">
+                      <span class="badge bg-primary rounded-pill" style="font-size: 1em;">{{ item.quantity }}</span>
+                    </td>
+                    <td class="text-end align-middle">
+                      <div>
+                        <strong class="text-dark">${{ item.sub_total }}</strong>
+                        <small class="text-muted d-block">${{ item.product.price }} each</small>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column - Order Summary -->
+      <aside class="col-lg-4">
+        <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+          <div class="card-header bg-warning text-dark py-3">
+            <h5 class="card-title mb-0">
+              <i class="fas fa-receipt me-2"></i>Order Summary
+            </h5>
+          </div>
+          <div class="card-body">
+            <!-- Order Total Breakdown -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted">Subtotal:</span>
+                <strong>${{ total }}</strong>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted">Tax (20%):</span>
+                <strong>${{ tax }}</strong>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="h5 text-dark">Total:</span>
+                <span class="h4 text-primary">${{ grand_total }}</span>
+              </div>
+            </div>
+
+            <!-- Stripe Payment Button -->
+            <form action="{% url 'create-checkout-session' %}" method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary btn-lg w-100 py-3 mb-3 shadow">
+                <i class="fas fa-lock me-2"></i>Pay with Stripe - ${{ grand_total }}
+              </button>
+            </form>
+
+            <!-- Security Badge -->
+            <div class="text-center">
+              <div class="mb-3">
+                <img src="{% static './images/misc/payments.png' %}" height="24" class="mb-2">
+              </div>
+              <small class="text-muted">
+                <i class="fas fa-shield-alt me-1 text-success"></i>
+                Your payment is secure and encrypted
+              </small>
+            </div>
+
+            <!-- Test Card Info -->
+            <div class="mt-4 p-3 bg-light rounded">
+              <h6 class="text-center mb-2">
+                <i class="fas fa-info-circle me-1 text-info"></i>Test Card
+              </h6>
+              <div class="text-center small">
+                <p class="mb-1"><strong>Card:</strong> 4242 4242 4242 4242</p>
+                <p class="mb-1"><strong>Expiry:</strong> Any future date</p>
+                <p class="mb-0"><strong>CVC:</strong> Any 3 digits</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+  .card {
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .card-header {
+    border-radius: 12px 12px 0 0 !important;
+    border: none;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+  
+  .table th {
+    border: none;
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  .table td {
+    border: none;
+    vertical-align: middle;
+  }
+  
+  .table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+  }
+  
+  .sticky-top {
+    z-index: 1;
+  }
+  
+  .badge {
+    font-size: 0.75em;
+  }
+</style>
+
+{% endblock %}
