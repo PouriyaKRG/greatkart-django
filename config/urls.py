@@ -11,7 +11,8 @@ urlpatterns = [
     path('account/', include('accounts.urls')),
     
     # ORDERS
-    path('orders/',include('orders.urls'))
+    path('orders/',include('orders.urls')),
+ 
 ]
 
 if settings.DEBUG:
