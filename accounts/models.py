@@ -4,16 +4,16 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, first_name, last_name, email_address, phone_number, user_name, password=None):
+    def create_user(self, first_name, last_name, email_address, phone_number, username, password=None):
         if not email_address:
             raise ValueError('email address is required')
         
-        if not user_name:
+        if not username:
             raise ValueError('username is required')
 
         user = self.model(
             email_address=self.normalize_email(email=email_address),
-            username=user_name,
+            username=username,
             first_name=first_name,
             last_name=last_name,
             phone_number=phone_number,
@@ -23,10 +23,10 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, first_name, last_name, email_address, user_name, phone_number, password):
+    def create_superuser(self, first_name, last_name, email_address, username, phone_number, password):
         user = self.create_user(
             first_name=first_name,
-            username=user_name,
+            username=username,
             last_name=last_name,
             email_address=self.normalize_email(email=email_address),
             phone_number=phone_number,
