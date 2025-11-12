@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import register, login, logout, activate, dashboard, forget_password,resetPassword_validate, reset_password,my_orders,edit_profile, change_password, order_details
 urlpatterns = [
-    path("", dashboard, name="home"),
+    path("", dashboard, name="dashboard"),
     path('register/', register,     name='register'),
     path('login/',    login,        name='login'),
     path('logout/',    logout,      name='logout'),

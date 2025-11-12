@@ -37,8 +37,32 @@
             >
             <div class="price mt-1">${{ product.price }}</div>
             <!-- price-wrap.// -->
+
+        <div class="rating-star">
+
+          <span style='color: gold;'>
+					{% with avg=product.averageReview %}
+					<!-- Star 1 -->
+					<i class="{% if avg >= 1 %}fas fa-star{% elif avg >= 0.5 %}fas fa-star-half-alt{% else %}far fa-star{% endif %}"></i>
+					
+					<!-- Star 2 -->
+					<i class="{% if avg >= 2 %}fas fa-star{% elif avg >= 1.5 %}fas fa-star-half-alt{% else %}far fa-star{% endif %}"></i>
+					
+					<!-- Star 3 -->
+					<i class="{% if avg >= 3 %}fas fa-star{% elif avg >= 2.5 %}fas fa-star-half-alt{% else %}far fa-star{% endif %}"></i>
+					
+					<!-- Star 4 -->
+					<i class="{% if avg >= 4 %}fas fa-star{% elif avg >= 3.5 %}fas fa-star-half-alt{% else %}far fa-star{% endif %}"></i>
+					
+					<!-- Star 5 -->
+					<i class="{% if avg >= 5 %}fas fa-star{% elif avg >= 4.5 %}fas fa-star-half-alt{% else %}far fa-star{% endif %}"></i>
+					{% endwith %}
+				</span>
+
+        </div>
           </figcaption>
         </div>
+
       </div>
       {% endfor %}
       <!-- col.// -->

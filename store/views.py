@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from store.models import Product, ReviewRating
+from store.models import Product, ReviewRating, ProductGallery
 from category.models import Category
 from carts.models import Cart, CartItem
 from .forms import ReviewForms
@@ -25,6 +25,7 @@ def store(request):
         'products_count': products_count,
     }
     return render(request, 'store/store_page.html', context)
+
 
 
 def filter_category(request, category_slug=None):
@@ -80,13 +81,15 @@ def product_detail(request, category_slug, product_slug):
 
         except:        
                 reviews = None
-                
+            
+        product_gallery = ProductGallery.objects.filter(product_id= product.id)        
         context = {
                 'product': product,
                 'is_in_cart': in_cart,
                 'is_product_ordered' : orderproduct,
                 'reviewExist': review_exist,
                 'reviews': reviews,
+                'product_gallery':product_gallery
         
             }
         return render(request, 'store/product_detail.html', context)
@@ -110,16 +113,19 @@ def product_detail(request, category_slug, product_slug):
 
         except:        
                 reviews = None
-                
+        
+        product_gallery = ProductGallery.objects.filter(product_id= product.id)                    
         context = {
                 'product': product,
                 'is_in_cart': in_cart,
                 'is_product_ordered' : orderproduct,
                 'reviewExist': review_exist,
                 'reviews': reviews,
+                'product_gallery': product_gallery
         
             }
         return render(request, 'store/product_detail.html', context)
+
 
 
 def search(request):
