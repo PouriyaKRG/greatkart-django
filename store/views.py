@@ -99,7 +99,7 @@ def product_detail(request, category_slug, product_slug):
                     cart__cart_id=__cart_id(request), product=product).exists()
         except Exception as e:
                 raise e
-                reviews = None
+        reviews = None
         review_exist = False    
         try:
                 
